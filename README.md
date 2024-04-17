@@ -1,5 +1,4 @@
 # FoodDeliveryApp
 
-This is food Delivery app
-
+This is food Delivery app git repo
 
