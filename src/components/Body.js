@@ -1,6 +1,8 @@
 import RestuarentCard from "./RestuarentCard";
-import { data } from "../utils/data"
-import { useState } from "react";
+import { data } from "../utils/data";
+import { useEffect, useState } from "react";
+import { SWIGGY_URL } from "../utils/constants";
+import Shimmer from "./Shimmer";
 /**you can props inline also -   <RestuarentCard resName="Meghana Foods" cuisine="Biryani, SouthIndia"/> */
 
 /**
@@ -20,18 +22,35 @@ const Body = () => {
      * setListOfRestaurants - called when it needs to update the satate(Ract introduced this to initiate the 
      * diff algorthim that helps in rendiring the UI)
     */
-    let [listOfRestaurants, setListOfRestaurants] = useState(data);
-    console.log(listOfRestaurants)
+    let [listOfRestaurants, setListOfRestaurants] = useState([]);
+
+/**
+ * This hook will be invoked(cb function) after componenet rendered
+ */
+    useEffect(()=> {
+       fecthData();
+    },[]);
+
+    const fecthData = async () => {
+        console.log('Fetch data invoked')
+        const data = await fetch(SWIGGY_URL);
+        const json = await data.json();
+        console.log(json.data.cards[4].card.card.gridElements.infoWithStyle.restaurants);
+        setListOfRestaurants(json.data.cards[4].card.card.gridElements.infoWithStyle.restaurants)
+    }
+
+    /* if(listOfRestaurants.length === 0) {
+        return <Shimmer/>
+    } */
     return (<div className='body'>
         <div className='search'>search</div>
         <button onClick={() => {
-            listOfRestaurants = listOfRestaurants.filter(restaurant =>  restaurant.info.avgRating > 4.5);
-            console.log(listOfRestaurants)
+            listOfRestaurants = listOfRestaurants.filter(restaurant =>  restaurant.info.avgRating > 4.2);
             setListOfRestaurants(listOfRestaurants)
-        }}>filter</button>
-        <div className='res-container'>.
+        }}>Top Rated Restaurants</button>
+        <div className='res-container'>
             {/* Never use INDEXS(Array Indexs ) as Key*/
-                listOfRestaurants.map(restaurant => <RestuarentCard key={restaurant.info.id} resData={restaurant} />)}
+                listOfRestaurants.length === 0 ? <Shimmer/> : listOfRestaurants.map(restaurant => <RestuarentCard key={restaurant.info.id} resData={restaurant} />)}
         </div>
     </div>)
 }
