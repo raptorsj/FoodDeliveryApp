@@ -23,7 +23,12 @@ const Body = () => {
      * diff algorthim that helps in rendiring the UI)
     */
     let [listOfRestaurants, setListOfRestaurants] = useState([]);
+    let [filterdRestaurants, setFilteredRestaurants] = useState([]);
+    /**
+     * local state variable of search text - for getting the input typed value
+     */
 
+    let [searchText, setSearchText] = useState("");
 /**
  * This hook will be invoked(cb function) after componenet rendered
  */
@@ -36,21 +41,34 @@ const Body = () => {
         const data = await fetch(SWIGGY_URL);
         const json = await data.json();
         console.log(json.data.cards[4].card.card.gridElements.infoWithStyle.restaurants);
-        setListOfRestaurants(json.data.cards[4].card.card.gridElements.infoWithStyle.restaurants)
+        setListOfRestaurants(json.data.cards[4].card.card.gridElements.infoWithStyle.restaurants);
+        setFilteredRestaurants(json.data.cards[4].card.card.gridElements.infoWithStyle.restaurants);
     }
 
     /* if(listOfRestaurants.length === 0) {
         return <Shimmer/>
     } */
+
     return (<div className='body'>
-        <div className='search'>search</div>
-        <button onClick={() => {
-            listOfRestaurants = listOfRestaurants.filter(restaurant =>  restaurant.info.avgRating > 4.2);
-            setListOfRestaurants(listOfRestaurants)
-        }}>Top Rated Restaurants</button>
+        <div className="filter">
+            <div className='search'>
+                <input  type="text" className="searchBox" value={searchText}
+                onChange={(e)=>setSearchText(e.target.value)}/>
+                <button onClick={() => {console.log(searchText)
+                     listOfRestaurants = listOfRestaurants.filter(restaurant =>  restaurant.info.name.split(" ").join("").toLowerCase().match(searchText.toLowerCase()));
+                     console.log(listOfRestaurants);
+                     setFilteredRestaurants(listOfRestaurants)
+                }}>Search</button>
+            </div>
+            <button className="top-rated" onClick={() => {
+                filterdRestaurants = listOfRestaurants.filter(restaurant =>  restaurant.info.avgRating > 4.2);
+                setFilteredRestaurants(filterdRestaurants)
+            }}>Top Rated Restaurants</button>
+        </div>
+       
         <div className='res-container'>
             {/* Never use INDEXS(Array Indexs ) as Key*/
-                listOfRestaurants.length === 0 ? <Shimmer/> : listOfRestaurants.map(restaurant => <RestuarentCard key={restaurant.info.id} resData={restaurant} />)}
+                filterdRestaurants.length === 0 ? <Shimmer/> : filterdRestaurants.map(restaurant => <RestuarentCard key={restaurant.info.id} resData={restaurant} />)}
         </div>
     </div>)
 }

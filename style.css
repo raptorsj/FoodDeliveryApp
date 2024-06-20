@@ -39,15 +39,27 @@
     
 }
 
+.login-btn {
+    padding: 10px;
+    margin: 10px;
+    border: 1px solid black;
+    background: #f0f0f0;
+    font-size: 20px;
+}
+
 .res-card:hover {
     border: 1px solid black;
     cursor: pointer;
 }
 
-.search {
-    padding: 10px
+.top-rated {
+    cursor: pointer;
 }
 
 .res-logo {
     width: 100%;
+}
+.filter {
+    display: flex;
+    margin: 10px;
 }
