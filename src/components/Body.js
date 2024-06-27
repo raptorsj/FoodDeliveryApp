@@ -31,6 +31,10 @@ const Body = () => {
     let [searchText, setSearchText] = useState("");
 /**
  * This hook will be invoked(cb function) after componenet rendered
+ * useEffect have 2 params - 1. cb, 2. dependency array (optional)
+ * if No dependency array present, useEffect will be invoked on every render of the componenet
+ * if dependency arry is empty ([]), then useEffect will be invoked during initial render
+ * if dependency array is not empty, useEffect will be called when dependency changes
  */
     useEffect(()=> {
        fecthData();
