@@ -3,6 +3,7 @@ import { data } from "../utils/data";
 import { useEffect, useState } from "react";
 import { SWIGGY_URL } from "../utils/constants";
 import Shimmer from "./Shimmer";
+import { Link } from "react-router-dom";
 /**you can props inline also -   <RestuarentCard resName="Meghana Foods" cuisine="Biryani, SouthIndia"/> */
 
 /**
@@ -60,7 +61,6 @@ const Body = () => {
                 onChange={(e)=>setSearchText(e.target.value)}/>
                 <button onClick={() => {console.log(searchText)
                      listOfRestaurants = listOfRestaurants.filter(restaurant =>  restaurant.info.name.split(" ").join("").toLowerCase().match(searchText.toLowerCase()));
-                     console.log(listOfRestaurants);
                      setFilteredRestaurants(listOfRestaurants)
                 }}>Search</button>
             </div>
@@ -72,7 +72,8 @@ const Body = () => {
        
         <div className='res-container'>
             {/* Never use INDEXS(Array Indexs ) as Key*/
-                filterdRestaurants.length === 0 ? <Shimmer/> : filterdRestaurants.map(restaurant => <RestuarentCard key={restaurant.info.id} resData={restaurant} />)}
+                filterdRestaurants.length === 0 ? <Shimmer/> : 
+                filterdRestaurants.map(restaurant => <Link key={restaurant.info.id} to={"/restaurentMenuCard/"+restaurant.info.id}><RestuarentCard  resData={restaurant} /> </Link>)}
         </div>
     </div>)
 }
