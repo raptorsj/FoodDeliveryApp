@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { SWIGGY_URL } from "../utils/constants";
 import Shimmer from "./Shimmer";
 import { Link } from "react-router-dom";
+import useOnlineStatus from "../utils/useOnlineStatus";
 /**you can props inline also -   <RestuarentCard resName="Meghana Foods" cuisine="Biryani, SouthIndia"/> */
 
 /**
@@ -37,6 +38,8 @@ const Body = () => {
  * if dependency arry is empty ([]), then useEffect will be invoked during initial render
  * if dependency array is not empty, useEffect will be called when dependency changes
  */
+    
+   
     useEffect(()=> {
        fecthData();
     },[]);
@@ -45,7 +48,6 @@ const Body = () => {
         console.log('Fetch data invoked')
         const data = await fetch(SWIGGY_URL);
         const json = await data.json();
-        console.log(json.data.cards[4].card.card.gridElements.infoWithStyle.restaurants);
         setListOfRestaurants(json.data.cards[4].card.card.gridElements.infoWithStyle.restaurants);
         setFilteredRestaurants(json.data.cards[4].card.card.gridElements.infoWithStyle.restaurants);
     }
@@ -53,6 +55,13 @@ const Body = () => {
     /* if(listOfRestaurants.length === 0) {
         return <Shimmer/>
     } */
+    
+    // custom hook for checking online status
+    const onlineStatus = useOnlineStatus();
+
+    if(onlineStatus === false) {
+        return (<h1>Looks like No internet connection. Please check your connection and come back</h1>)
+    }
 
     return (<div className='body'>
         <div className="filter">
